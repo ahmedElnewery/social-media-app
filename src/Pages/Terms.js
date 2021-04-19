@@ -1,4 +1,4 @@
-import Page from "../Layout/Page";
+import Page from "../Components/Layout/Page";
 
 const Terms = () => {
   return (
