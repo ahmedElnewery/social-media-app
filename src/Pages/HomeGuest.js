@@ -15,7 +15,7 @@ const HomeGuest = (props) => {
           </p>
         </div>
         <div className="col-lg-5 pl-lg-5 pb-3 py-lg-5">
-        <Signup setIsLogin={props.setIsLogin}/>
+        <Signup />
         </div>
       </div>
     </Page>

@@ -1,8 +1,15 @@
 import { useFormik } from "formik";
+import { useContext } from "react";
 import { withRouter } from "react-router";
+import { toast } from "react-toastify";
 import * as Yup from "yup";
+import { DispatchContext } from "../../store/context";
 import * as authServices from "./../../services/auth";
+import * as actionTypes from './../../store/action-types'
 const Login = (props) => {
+
+const dispatch = useContext(DispatchContext)
+
   const formik = useFormik({
     initialValues: {
       username: "",
@@ -22,14 +29,10 @@ const Login = (props) => {
     }),
     onSubmit: async ({ username, password }) => {
       try {
-          console.log(username ,password);
         const res = await authServices.login({ username, password });
-        localStorage.setItem("userInfo", JSON.stringify(res.data));
+        dispatch({type:actionTypes.login, payload:res.data})
+        toast.success("login Successfully")
         formik.resetForm()
-
-        props.setIsLogin(true)
-
-        props.history.push("/")
       } catch (error) {
         console.log(error);
       }

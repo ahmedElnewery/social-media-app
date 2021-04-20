@@ -1,9 +1,13 @@
+import { useContext } from "react";
 import { Link } from "react-router-dom";
+import { DispatchContext, StateContext } from "../../store/context";
+import * as actionTypes from '../../store/action-types'
+const UserHeader = (props) => {
+  const dispatch = useContext(DispatchContext);
+  const state = useContext(StateContext);
 
-const HeaderLogin = (props) => {
     const handleSignOut =() =>{
-        localStorage.removeItem("userInfo")
-        props.setIsLogin(false)
+        dispatch({type:actionTypes.logout})
     }
     return ( 
         <div className="flex-row my-3 my-md-0">
@@ -15,11 +19,11 @@ const HeaderLogin = (props) => {
             <span className="chat-count-badge text-white"> </span>
           </span>
           <Link to="/" className="mr-2">
-            <img className="small-header-avatar" src="https://gravatar.com/avatar/b9408a09298632b5151200f3449434ef?s=128" alt=""/>
+            <img className="small-header-avatar" src={state.userInfo.avatar} alt={state.userInfo.username}/>
           </Link>
-          <a className="btn btn-sm btn-success mr-2" href="/create-post">
+          <Link className="btn btn-sm btn-success mr-2" to="/create-post">
             Create Post
-          </a>
+          </Link>
           <button className="btn btn-sm btn-secondary" onClick={handleSignOut}>
             Sign Out
           </button>
@@ -27,4 +31,4 @@ const HeaderLogin = (props) => {
      );
 }
  
-export default HeaderLogin;
+export default UserHeader;
