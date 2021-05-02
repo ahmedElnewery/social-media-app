@@ -1,16 +1,39 @@
-import React, { useEffect } from "react"
+import React, {  useEffect, useState } from "react"
 import { Link, withRouter } from "react-router-dom"
+import { useParams } from "react-router";
 import Page from "../Components/Layout/Page"
-
+import Spinner from "../Components/UI/Spinner/Spinner";
+import ConvertToLocalDate from "../utiltes/datePipe";
+import axios from "axios";
+import ReactMarkdown from 'react-markdown'
 
 const  PostDetails =(props)=> {
-    // useEffect(() => {
-      
-    // }, [input])
+const [post, setPost] = useState({});
+const [loading, setLoading] = useState(false);
+ 
+  const { id } = useParams();
+    useEffect(() => {
+      const request = axios.CancelToken.source()
+      setLoading(true)
+      axios.get(`/post/${id}`,{
+        cancelToken:request.token,
+        
+      }).then(res=>{
+     setPost(res.data)
+     setLoading(false)
+   }).catch((err)=>{
+     console.log(err)
+     setLoading(false)
+
+   })
+   return ()=>{
+     request.cancel("post request was cancelled")
+   }
+    }, [id])
   return (
-    <Page title="Fake Hardcoded Title">
+   loading ? <Spinner/>: <Page title={`${post.title} | ${post.author && post.author.username}` }>
       <div className="d-flex justify-content-between">
-        <h2>Example Post Title</h2>
+        <h2>{post.title}</h2>
         <span className="pt-2">
           <Link to="/" className="text-primary mr-2" title="Edit">
             <i className="fas fa-edit"></i>
@@ -23,16 +46,13 @@ const  PostDetails =(props)=> {
 
       <p className="text-muted small mb-4">
         <Link to="/">
-          <img className="avatar-tiny" src="https://gravatar.com/avatar/b9408a09298632b5151200f3449434ef?s=128" alt="" />
+          <img className="avatar-tiny" src={ post.author && post.author.avatar} alt="" />
         </Link>
-        Posted by <Link to="/">brad</Link> on 2/10/2020
+        Posted by <Link to="/">{post.author && post.author.username}</Link> on {ConvertToLocalDate(post.createdDate)}
       </p>
 
       <div className="body-content">
-        <p>
-          Lorem ipsum dolor sit <strong>example</strong> post adipisicing elit. Iure ea at esse, tempore qui possimus soluta impedit natus voluptate, sapiente saepe modi est pariatur. Aut voluptatibus aspernatur fugiat asperiores at.
-        </p>
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Beatae quod asperiores corrupti omnis qui, placeat neque modi, dignissimos, ab exercitationem eligendi culpa explicabo nulla tempora rem? Lorem ipsum dolor sit amet consectetur adipisicing elit. Iure ea at esse, tempore qui possimus soluta impedit natus voluptate, sapiente saepe modi est pariatur. Aut voluptatibus aspernatur fugiat asperiores at.</p>
+      <ReactMarkdown children ={post.body}/>
       </div>
     </Page>
   )

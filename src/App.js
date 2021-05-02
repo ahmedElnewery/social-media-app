@@ -15,6 +15,7 @@ import Terms from "./Pages/Terms";
 import { DispatchContext } from "./store/context";
 import {StateContext} from "./store/context";
 import { rootReducer, initialState } from "./store/reducer";
+import Profile from "./Pages/Profile";
 
 function App() {
   const [state, dispatch] = useReducer(rootReducer, initialState);
@@ -34,6 +35,9 @@ function App() {
         <Switch>
           <Route path="/" exact>
             {state.isLogin ? <Home /> : <HomeGuest />}
+          </Route>
+          <Route path="/profile/:username">
+            <Profile/>
           </Route>
           <Route path="/create-post">
             <CreatePost/>
