@@ -17,6 +17,7 @@ import { StateContext } from "./store/context";
 import { rootReducer, initialState } from "./store/reducer";
 import Profile from "./Pages/Profile";
 import EditPost from "./Pages/EditPost";
+import NotFound from "./Pages/NotFound";
 
 function App() {
   const [state, dispatch] = useReducer(rootReducer, initialState);
@@ -58,6 +59,9 @@ function App() {
           </Route>
           <Route path="/terms" exact>
             <Terms />
+          </Route>
+          <Route  >
+            <NotFound />
           </Route>
         </Switch>
         <Footer />

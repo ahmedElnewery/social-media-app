@@ -1,15 +1,21 @@
 import axios from "axios";
 import { useFormik } from "formik";
-import { useContext, useEffect } from "react";
-import { useParams, withRouter } from "react-router";
+import { useContext, useEffect, useState } from "react";
+import {  useParams, withRouter } from "react-router";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import * as Yup from "yup";
 import Page from "../Components/Layout/Page";
+import Spinner from "../Components/UI/Spinner/Spinner";
 import { StateContext } from "../store/context";
+import NotFound from "./NotFound";
 // import * as actionTypes from "./../store/action-types";
 const EditPost = (props) => {
   const appState = useContext(StateContext);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [notFound, setNotFound] = useState(false);
+
   const { id } = useParams();
   const formik = useFormik({
     initialValues: {
@@ -31,6 +37,7 @@ const EditPost = (props) => {
           body,
           token: appState.userInfo.token,
         });
+
         toast.success("edited successfully");
       } catch (error) {
         console.log(error);
@@ -38,23 +45,43 @@ const EditPost = (props) => {
     },
   });
   useEffect(() => {
-    console.log("title:", formik.values.title);
+    setLoading(true);
+
     const req = axios.CancelToken.source();
     axios
       .get(`/post/${id}`, { cancelToken: req.token })
       .then((res) => {
+        if (
+          !appState.userInfo &&
+          res.data.author.username !== appState.userInfo
+        ) {
+          toast.error("you are not authorized to edited this post");
+          props.history.push("/");
+        }
         const { title, body } = res.data;
+        if (res && !res.data) {
+          setNotFound(true);
+        }
         formik.setValues({ ...formik.values, title, body });
+        setLoading(false);
       })
-      .catch();
+      .catch((ex) => {
+        setLoading(false);
+        if (ex.response && ex.response.data) setError(ex.response.data);
+      });
     return () => {
       req.cancel();
     };
   }, [id]);
-  return (
+  if (notFound) {
+    return <NotFound />;
+  }
+  return loading ? (
+    <Spinner />
+  ) : (
     <Page title="Create New Post">
       <div className="mb-5">
-      <Link to={`/post/${id}`}>{"<< "}back</Link>
+        <Link to={`/post/${id}`}> &laquo; back</Link>
       </div>
       <form onSubmit={formik.handleSubmit}>
         <div className="form-group">

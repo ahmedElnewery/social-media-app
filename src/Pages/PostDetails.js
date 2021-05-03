@@ -7,11 +7,12 @@ import ConvertToLocalDate from "../utiltes/datePipe";
 import axios from "axios";
 import ReactMarkdown from "react-markdown";
 import { StateContext } from "../store/context";
+import NotFound from "./NotFound";
 
 const PostDetails = (props) => {
   const [post, setPost] = useState({});
   const [loading, setLoading] = useState(false);
-
+  
   const appState = useContext(StateContext);
 
   const { id } = useParams();
@@ -35,14 +36,18 @@ const PostDetails = (props) => {
     };
   }, [id]);
   function isOwner() {
-    if(appState.isLogin &&
-      post.author&&
-        appState.userInfo.username === post.author.username ){
-          return true
-        }
-    return false
+    if (
+      appState.isLogin &&
+      post.author &&
+      appState.userInfo.username === post.author.username
+    ) {
+      return true;
+    }
+    return false;
   }
-      
+  if (!loading && !post) {
+    return <NotFound/>;
+  }
   return loading ? (
     <Spinner />
   ) : (
@@ -50,23 +55,23 @@ const PostDetails = (props) => {
       <div className="d-flex justify-content-between">
         <h2>{post.title}</h2>
         {isOwner && (
-            <span className="pt-2">
-              <Link
-                to={`/post/${id}/edit`}
-                className="text-primary mr-2"
-                title="Edit"
-              >
-                <i className="fas fa-edit"></i>
-              </Link>
-              <Link
-                to="/"
-                className="delete-post-button text-danger"
-                title="Delete"
-              >
-                <i className="fas fa-trash"></i>
-              </Link>
-            </span>
-          )}
+          <span className="pt-2">
+            <Link
+              to={`/post/${id}/edit`}
+              className="text-primary mr-2"
+              title="Edit"
+            >
+              <i className="fas fa-edit"></i>
+            </Link>
+            <Link
+              to="/"
+              className="delete-post-button text-danger"
+              title="Delete"
+            >
+              <i className="fas fa-trash"></i>
+            </Link>
+          </span>
+        )}
       </div>
 
       <p className="text-muted small mb-4">
