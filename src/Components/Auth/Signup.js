@@ -6,6 +6,7 @@ import * as authServices from "./../../services/auth";
 import { DispatchContext } from "../../store/context";
 import * as actionTypes from './../../store/action-types'
 import { useContext } from "react";
+import { toast } from "react-toastify";
 const Signup = (props) => {
 
   const  dispatch = useContext(DispatchContext)
@@ -37,7 +38,10 @@ const Signup = (props) => {
         
         props.history.push("/")
       } catch (error) {
-        console.log(error);
+        if(error.response && error.response.status === 500){
+          formik.setErrors({username:error.response.data[0] })
+          toast.error(error.response.data[0])
+        }
       }
     },
   });

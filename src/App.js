@@ -2,7 +2,7 @@ import { useEffect, useReducer } from "react";
 import { Route, Switch } from "react-router";
 import { ToastContainer } from "react-toastify";
 import "./App.css";
-import 'react-toastify/dist/ReactToastify.css';
+import "react-toastify/dist/ReactToastify.css";
 
 import Footer from "./Components/Layout/Footer";
 import Header from "./Components/Layout/Header";
@@ -13,37 +13,45 @@ import HomeGuest from "./Pages/HomeGuest";
 import PostDetails from "./Pages/PostDetails";
 import Terms from "./Pages/Terms";
 import { DispatchContext } from "./store/context";
-import {StateContext} from "./store/context";
+import { StateContext } from "./store/context";
 import { rootReducer, initialState } from "./store/reducer";
 import Profile from "./Pages/Profile";
+import EditPost from "./Pages/EditPost";
 
 function App() {
   const [state, dispatch] = useReducer(rootReducer, initialState);
   useEffect(() => {
     if (state.isLogin) {
-      localStorage.setItem("userInfo", JSON.stringify(state.userInfo))
+      localStorage.setItem("userInfo", JSON.stringify(state.userInfo));
     } else {
-      localStorage.removeItem("userInfo")
+      localStorage.removeItem("userInfo");
     }
-  }, [state.isLogin,state.userInfo]);
+  }, [state.isLogin, state.userInfo]);
 
   return (
     <StateContext.Provider value={state}>
       <DispatchContext.Provider value={dispatch}>
-      <ToastContainer/>
+        <ToastContainer
+          position="top-center"
+          autoClose={2000}
+       
+        />
         <Header />
         <Switch>
           <Route path="/" exact>
             {state.isLogin ? <Home /> : <HomeGuest />}
           </Route>
           <Route path="/profile/:username">
-            <Profile/>
+            <Profile />
           </Route>
           <Route path="/create-post">
-            <CreatePost/>
+            <CreatePost />
           </Route>
-          <Route path="/post/:id">
-            <PostDetails/>
+          <Route path="/post/:id" exact>
+            <PostDetails />
+          </Route>
+          <Route path="/post/:id/edit">
+            <EditPost />
           </Route>
           <Route path="/about-us" exact>
             <About />
@@ -53,7 +61,6 @@ function App() {
           </Route>
         </Switch>
         <Footer />
-        
       </DispatchContext.Provider>
     </StateContext.Provider>
   );

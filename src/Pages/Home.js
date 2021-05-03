@@ -5,7 +5,7 @@ import { StateContext } from "../store/context";
 const Home = () => {
 const state = useContext(StateContext)
   return (
-       <Page title="his name">
+       <Page title={state.userInfo.username}>
     
       <h2 className="text-center">
         Hello <strong>{state.userInfo.username}</strong>, your feed is empty.
