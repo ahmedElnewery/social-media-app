@@ -8,11 +8,12 @@ import axios from "axios";
 import ReactMarkdown from "react-markdown";
 import { StateContext } from "../store/context";
 import NotFound from "./NotFound";
+import { toast } from "react-toastify";
 
 const PostDetails = (props) => {
   const [post, setPost] = useState({});
   const [loading, setLoading] = useState(false);
-  
+
   const appState = useContext(StateContext);
 
   const { id } = useParams();
@@ -35,6 +36,20 @@ const PostDetails = (props) => {
       request.cancel("post request was cancelled");
     };
   }, [id]);
+  const deleteHandler = async () => {
+    const isOk = window.confirm("do you want to delete");
+    if (isOk) {
+      try {
+        const res = await axios.delete(`/post/${id}`, {
+          data: { token: appState.userInfo.token },
+        });
+        if (res.data === "Success") {
+          toast.success("deleted successfully");
+          props.history.replace(`/profile/${appState.userInfo.username}`)
+        }
+      } catch (error) {}
+    }
+  };
   function isOwner() {
     if (
       appState.isLogin &&
@@ -46,7 +61,7 @@ const PostDetails = (props) => {
     return false;
   }
   if (!loading && !post) {
-    return <NotFound/>;
+    return <NotFound />;
   }
   return loading ? (
     <Spinner />
@@ -63,13 +78,13 @@ const PostDetails = (props) => {
             >
               <i className="fas fa-edit"></i>
             </Link>
-            <Link
-              to="/"
+            <button
+              onClick={deleteHandler}
               className="delete-post-button text-danger"
               title="Delete"
             >
               <i className="fas fa-trash"></i>
-            </Link>
+            </button>
           </span>
         )}
       </div>
