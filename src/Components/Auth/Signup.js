@@ -34,7 +34,7 @@ const Signup = (props) => {
       try {
         const res = await authServices.register({ username, email, password });
         formik.resetForm()
-        dispatch({type:actionTypes.login,payload:res.data})
+        dispatch({type:actionTypes.LOGIN,payload:res.data})
         
         props.history.push("/")
       } catch (error) {

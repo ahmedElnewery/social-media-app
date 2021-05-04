@@ -1,24 +1,36 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import { useContext } from "react";
 import { Link } from "react-router-dom";
 import { DispatchContext, StateContext } from "../../store/context";
 import * as actionTypes from '../../store/action-types'
+import ReactTooltip from 'react-tooltip';
+
 const UserHeader = (props) => {
   const dispatch = useContext(DispatchContext);
   const state = useContext(StateContext);
 
     const handleSignOut =() =>{
-        dispatch({type:actionTypes.logout})
+        dispatch({type:actionTypes.LOGOUT})
+    }
+    const handleOpenSearch = (e) =>{
+      e.preventDefault()
+      dispatch({type:actionTypes.OPEN_SEARCH})
     }
     return ( 
         <div className="flex-row my-3 my-md-0">
-          <Link to="/" className="text-white mr-2 header-search-icon">
+          <ReactTooltip className="custom-tooltip" id="search"/>
+          <a  onClick={handleOpenSearch} data-for="search" data-tip="Search" className="text-white mr-2 header-search-icon">
             <i className="fas fa-search"></i>
-          </Link>
-          <span className="mr-2 header-chat-icon text-white">
+          </a>
+          <ReactTooltip className="custom-tooltip" id="chat"/>
+
+          <span  data-for="chat" data-tip="Chat" className="mr-2 header-chat-icon text-white">
             <i className="fas fa-comment"></i>
             <span className="chat-count-badge text-white"> </span>
           </span>
-          <Link to={ `/profile/${state.userInfo.username}`} className="mr-2">
+          <ReactTooltip className="custom-tooltip" id="profile"/>
+
+          <Link to={ `/profile/${state.userInfo.username}`} className="mr-2" data-for="profile" data-tip="Profile">
             <img className="small-header-avatar" src={state.userInfo.avatar} alt={state.userInfo.username}/>
           </Link>
           <Link className="btn btn-sm btn-success mr-2" to="/create-post">

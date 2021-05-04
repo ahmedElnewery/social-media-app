@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useContext, useEffect, useState } from "react";
 import { Link, withRouter } from "react-router-dom";
 import { useParams } from "react-router";
@@ -9,6 +10,7 @@ import ReactMarkdown from "react-markdown";
 import { StateContext } from "../store/context";
 import NotFound from "./NotFound";
 import { toast } from "react-toastify";
+import ReactTooltip from "react-tooltip";
 
 const PostDetails = (props) => {
   const [post, setPost] = useState({});
@@ -45,7 +47,7 @@ const PostDetails = (props) => {
         });
         if (res.data === "Success") {
           toast.success("deleted successfully");
-          props.history.replace(`/profile/${appState.userInfo.username}`)
+          props.history.replace(`/profile/${appState.userInfo.username}`);
         }
       } catch (error) {}
     }
@@ -70,22 +72,31 @@ const PostDetails = (props) => {
       <div className="d-flex justify-content-between">
         <h2>{post.title}</h2>
         {isOwner && (
-          <span className="pt-2">
-            <Link
-              to={`/post/${id}/edit`}
-              className="text-primary mr-2"
-              title="Edit"
-            >
-              <i className="fas fa-edit"></i>
-            </Link>
-            <button
-              onClick={deleteHandler}
-              className="delete-post-button text-danger"
-              title="Delete"
-            >
-              <i className="fas fa-trash"></i>
-            </button>
-          </span>
+          <>
+
+            <span className="pt-2">
+            <ReactTooltip className="custom-tooltip" id="edit" />
+              <Link
+                to={`/post/${id}/edit`}
+                className="text-primary mr-2"
+                title="Edit"
+                data-tip="Edit"
+                data-for="edit"
+              >
+                <i className="fas fa-edit"></i>
+              </Link>
+              <ReactTooltip className="custom-tooltip" id="delete" />
+              <a
+                onClick={deleteHandler}
+                className="delete-post-button text-danger"
+                title="Delete"
+                data-tip="Delete"
+                data-for="delete"
+              >
+                <i className="fas fa-trash"></i>
+              </a>
+            </span>
+          </>
         )}
       </div>
 

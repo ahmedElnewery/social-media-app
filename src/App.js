@@ -18,6 +18,8 @@ import { rootReducer, initialState } from "./store/reducer";
 import Profile from "./Pages/Profile";
 import EditPost from "./Pages/EditPost";
 import NotFound from "./Pages/NotFound";
+import Search from "./Components/Layout/Search";
+import { CSSTransition } from "react-transition-group";
 
 function App() {
   const [state, dispatch] = useReducer(rootReducer, initialState);
@@ -32,11 +34,7 @@ function App() {
   return (
     <StateContext.Provider value={state}>
       <DispatchContext.Provider value={dispatch}>
-        <ToastContainer
-          position="top-center"
-          autoClose={2000}
-       
-        />
+        <ToastContainer position="top-center" autoClose={2000} />
         <Header />
         <Switch>
           <Route path="/" exact>
@@ -60,10 +58,18 @@ function App() {
           <Route path="/terms" exact>
             <Terms />
           </Route>
-          <Route  >
+          <Route>
             <NotFound />
           </Route>
         </Switch>
+        <CSSTransition
+          in={state.isSearchOpen}
+          timeout={500}
+          classNames="search-overlay"
+          unmountOnExit
+        >
+          <Search />
+        </CSSTransition>
         <Footer />
       </DispatchContext.Provider>
     </StateContext.Provider>

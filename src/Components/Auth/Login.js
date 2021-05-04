@@ -30,7 +30,7 @@ const dispatch = useContext(DispatchContext)
     onSubmit: async ({ username, password }) => {
       try {
         const res = await authServices.login({ username, password });
-        dispatch({type:actionTypes.login, payload:res.data})
+        dispatch({type:actionTypes.LOGIN, payload:res.data})
         toast.success("login Successfully")
         formik.resetForm()
       } catch (error) {
