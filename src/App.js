@@ -1,4 +1,4 @@
-import { useEffect, useReducer } from "react";
+import { useEffect, useReducer, useRef } from "react";
 import { Route, Switch } from "react-router";
 import { ToastContainer } from "react-toastify";
 import "./App.css";
@@ -30,6 +30,7 @@ function App() {
       localStorage.removeItem("userInfo");
     }
   }, [state.isLogin, state.userInfo]);
+  const nodeRef = useRef(null)
 
   return (
     <StateContext.Provider value={state}>
@@ -67,6 +68,7 @@ function App() {
           timeout={500}
           classNames="search-overlay"
           unmountOnExit
+          nodeRef={nodeRef}
         >
           <Search />
         </CSSTransition>

@@ -4,7 +4,7 @@ import { Link, withRouter } from "react-router-dom";
 import { useParams } from "react-router";
 import Page from "../Components/Layout/Page";
 import Spinner from "../Components/UI/Spinner/Spinner";
-import ConvertToLocalDate from "../utiltes/datePipe";
+import convertToLocalDate from "../utiltes/datePipe";
 import axios from "axios";
 import ReactMarkdown from "react-markdown";
 import { StateContext } from "../store/context";
@@ -109,7 +109,7 @@ const PostDetails = (props) => {
           />
         </Link>
         Posted by <Link to="/">{post.author && post.author.username}</Link> on{" "}
-        {ConvertToLocalDate(post.createdDate)}
+        {convertToLocalDate(post.createdDate)}
       </p>
 
       <div className="body-content">
