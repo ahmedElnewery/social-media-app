@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import ConvertToLocalDate from "../../utiltes/datePipe";
+import convertToLocalDate from "../../utiltes/datePipe";
 import Spinner from "../UI/Spinner/Spinner";
 import axios from "axios";
 
@@ -43,7 +43,7 @@ const UserPosts = (props) => {
                 <strong>{post.title}</strong> 
                 <span className="ml-3 text-muted small">
                   on{" "}
-                  {ConvertToLocalDate(post.createdDate)}
+                  {convertToLocalDate(post.createdDate)}
                 </span>
               </Link>
             );
