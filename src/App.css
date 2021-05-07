@@ -343,6 +343,7 @@ textarea.tall-textarea {
   transition: 0.33s opacity ease-in-out, 0.33s transform ease-in-out;
 }
 
+
 .chat-wrapper--is-visible {
   opacity: 1;
   transform: translateY(0);

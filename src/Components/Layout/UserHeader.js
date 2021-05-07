@@ -24,9 +24,9 @@ const UserHeader = (props) => {
           </a>
           <ReactTooltip className="custom-tooltip" id="chat"/>
 
-          <span  data-for="chat" data-tip="Chat" className="mr-2 header-chat-icon text-white">
+          <span onClick={()=>dispatch({type:actionTypes.TOGGLE_CHAT})}  data-for="chat" data-tip="Chat" className={"mr-2 header-chat-icon "+(state.unreadMessages ?" text-danger" : " text-white")}>
             <i className="fas fa-comment"></i>
-            <span className="chat-count-badge text-white"> </span>
+            <span className="chat-count-badge text-white">{state.unreadMessages <10 ?  state.unreadMessages : "+9"}</span>
           </span>
           <ReactTooltip className="custom-tooltip" id="profile"/>
 

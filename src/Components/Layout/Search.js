@@ -1,10 +1,9 @@
 import { useContext, useEffect } from "react";
-import { Link } from "react-router-dom";
 import { DispatchContext } from "../../store/context";
 import * as actionTypes from "./../../store/action-types";
 import { useImmer } from "use-immer";
 import axios from "axios";
-import convertToLocalDate from "../../utiltes/datePipe";
+import Post from "../Shared/Post";
 
 const Search = (props) => {
   const [state, setState] = useImmer({
@@ -53,6 +52,7 @@ const Search = (props) => {
         draft.show = "neither";
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.searchQuery]);
   useEffect(() => {
     if (state.requestCount) {
@@ -77,9 +77,11 @@ const Search = (props) => {
         request.cancel();
       };
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.requestCount]);
   return (
-    <div className="search-overlay">
+    
+    <div className="search-overlay" >
       <div className="search-overlay-top shadow-sm">
         <div className="container container--narrow">
           <label htmlFor="live-search-field" className="search-overlay-icon">
@@ -114,31 +116,25 @@ const Search = (props) => {
               (state.show === "results" ? " live-search-results--visible " : "")
             }
           >
-            {Boolean(state.results.length)?<div className="list-group shadow-sm">
-              <div className="list-group-item active">
-                <strong>Search Results</strong> ({state.results.length}{" "}
-                {state.results.length === 1 ? "item" : "items"} found)
+            {Boolean(state.results.length) ? (
+              <div className="list-group shadow-sm">
+                <div className="list-group-item active">
+                  <strong>Search Results</strong> ({state.results.length}{" "}
+                  {state.results.length === 1 ? "item" : "items"} found)
+                </div>
+                {state.results.map((post) => (
+                  <Post
+                    post={post}
+                    key={post._id}
+                    onClick={() => dispatch({ type: actionTypes.CLOSE_SEARCH })}
+                  />
+                ))}
               </div>
-              {state.results.map((post) => (
-                <Link
-                  key={post._id}
-                  to={`/post/${post._id}`}
-                  onClick={()=>dispatch({type:actionTypes.CLOSE_SEARCH})}
-                  className="list-group-item list-group-item-action"
-                >
-                  <img
-                    className="avatar-tiny"
-                    src={post.author.avatar}
-                    alt="user profile"
-                  />{" "}
-                  <strong>{post.title}</strong>{" "}
-                  <span className="text-muted small">
-                    by {post.author.username} on{" "}
-                    {convertToLocalDate(post.createdDate)}{" "}
-                  </span>
-                </Link>
-              ))}
-            </div> : <p className="alert alert-danger text-center shadow-sm">sorry ! we couldn't find results with that search.</p>}
+            ) : (
+              <p className="alert alert-danger text-center shadow-sm">
+                sorry ! we couldn't find results with that search.
+              </p>
+            )}
           </div>
         </div>
       </div>
